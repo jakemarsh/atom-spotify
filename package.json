@@ -1,0 +1,14 @@
+{
+  "name": "atom-spotify",
+  "main": "./lib/atom-spotify",
+  "version": "0.0.1",
+  "description": "Displays the current song in your music app in Atom's status bar",
+  "repository": "https://github.com/jakemarsh/atom-spotify",
+  "license": "MIT",
+  "engines": {
+    "atom": ">0.50.0"
+  },
+  "dependencies": {
+    "spotify-node-applescript": "0.2.x"
+  }
+}
