@@ -1,5 +1,4 @@
 {View} = require 'atom'
-
 spotify = require 'spotify-node-applescript'
 
 module.exports =
@@ -9,6 +8,8 @@ class AtomSpotifyStatusBarView extends View
       @span outlet: "trackInfo", class: 'atom-spotify-status', tabindex: '-1', ""
 
   initialize: ->
+    # We wait until all the other packages have been loaded,
+    # so all the other status bar views have been attached
     @subscribe atom.packages.once 'activated', =>
       # We use an ugly setTimeout here to make sure our view gets
       # added as the "last" (farthest right) item in the
@@ -19,6 +20,6 @@ class AtomSpotifyStatusBarView extends View
 
   afterAttach: ->
     setInterval =>
-      spotify.getTrack (err, track) =>
+      spotify.getTrack (error, track) =>
         @trackInfo.text("♫ #{track.artist} - #{track.name}")
     , 1000

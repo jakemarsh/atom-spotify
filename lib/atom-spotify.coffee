@@ -1,5 +1,5 @@
 AtomSpotifyStatusBarView = require './atom-spotify-status-bar-view'
 
 module.exports =
-  activate: (state) ->
+  activate: ->
     @atomSpotifyStatusBarView = new AtomSpotifyStatusBarView()
