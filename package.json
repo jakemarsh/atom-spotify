@@ -2,7 +2,7 @@
   "name": "atom-spotify",
   "main": "./lib/atom-spotify",
   "version": "0.0.1",
-  "description": "Displays the current song in your music app in Atom's status bar",
+  "description": "Displays the currently playing song in Spotify in Atom's status bar",
   "repository": "https://github.com/jakemarsh/atom-spotify",
   "license": "MIT",
   "engines": {
