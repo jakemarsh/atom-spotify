@@ -22,8 +22,10 @@ class AtomSpotifyStatusBarView extends View
       , 1
 
   updateTrackInfo: ->
-    spotify.getTrack (error, track) =>
-      @trackInfo.text("♫ #{track.artist} - #{track.name}") if track
+    spotify.isRunning (err, isRunning) =>
+      if isRunning
+        spotify.getTrack (error, track) =>
+          @trackInfo.text("♫ #{track.artist} - #{track.name}") if track
 
   afterAttach: ->
     setInterval =>
