@@ -6,8 +6,8 @@ Displays the currently playing song in Spotify in Atom's status bar.
 
 Use the following key commands to control Spotify from inside Atom:
 
-- **Play next song**: `cmd-shift-right`
-- **Play previous song**: `cmd-shift-left`
+- **Play next song**: `cmd-alt-shift-right`
+- **Play previous song**: `cmd-alt-shift-left`
 
 Or use the menu items in *Packages -> Spotify*.
 
