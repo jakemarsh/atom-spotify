@@ -8,6 +8,9 @@ class AtomSpotifyStatusBarView extends View
       @span outlet: "trackInfo", class: 'atom-spotify-status', tabindex: '-1', ""
 
   initialize: ->
+    atom.workspaceView.command 'atom-spotify:next', => spotify.next => @updateTrackInfo()
+    atom.workspaceView.command 'atom-spotify:previous', => spotify.previous => @updateTrackInfo()
+
     # We wait until all the other packages have been loaded,
     # so all the other status bar views have been attached
     @subscribe atom.packages.once 'activated', =>
@@ -18,8 +21,11 @@ class AtomSpotifyStatusBarView extends View
         atom.workspaceView.statusBar.appendLeft(this)
       , 1
 
+  updateTrackInfo: ->
+    spotify.getTrack (error, track) =>
+      @trackInfo.text("♫ #{track.artist} - #{track.name}") if track
+
   afterAttach: ->
     setInterval =>
-      spotify.getTrack (error, track) =>
-        @trackInfo.text("♫ #{track.artist} - #{track.name}")
+      @updateTrackInfo()
     , 1000

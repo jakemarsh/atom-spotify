@@ -1,0 +1,3 @@
+'.platform-darwin, .platform-darwin .command-palette .editor':
+  'cmd-shift-right': 'atom-spotify:next'
+  'cmd-shift-left': 'atom-spotify:previous'

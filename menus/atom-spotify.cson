@@ -1,0 +1,12 @@
+'menu': [
+  {
+    'label': 'Packages'
+    'submenu': [
+      'label': 'Spotify'
+      'submenu': [
+        { 'label': 'Play next song', 'command': 'atom-spotify:next' }
+        { 'label': 'Play previous song', 'command': 'atom-spotify:previous' }
+      ]
+    ]
+  }
+]
