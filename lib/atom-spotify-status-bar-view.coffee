@@ -39,17 +39,18 @@ class AtomSpotifyStatusBarView extends View
     spotify.isRunning (err, isRunning) =>
       if isRunning
         spotify.getTrack (error, track) =>
-          trackInfoText = "#{track.artist} - #{track.name}"
-          if !atom.config.get('atom-spotify.showEqualizer')
-            trackInfoText = "♫ " + trackInfoText
           if track
-            @trackInfo.text(trackInfoText)
-            if atom.config.get('atom-spotify.showEqualizer')
-              bars.attr('data-hidden', false)
-          else
-            @trackInfo.text('')
-            if atom.config.get('atom-spotify.showEqualizer')
-              bars.attr('data-hidden', true)
+            trackInfoText = "#{track.artist} - #{track.name}"
+            if !atom.config.get('atom-spotify.showEqualizer')
+              trackInfoText = "♫ " + trackInfoText
+            if track
+              @trackInfo.text(trackInfoText)
+              if atom.config.get('atom-spotify.showEqualizer')
+                bars.attr('data-hidden', false)
+            else
+              @trackInfo.text('')
+              if atom.config.get('atom-spotify.showEqualizer')
+                bars.attr('data-hidden', true)
       else # spotify isn't running, hide the sound bars!
         @trackInfo.text('')
         bars.attr('data-hidden', true)
