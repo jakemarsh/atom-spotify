@@ -25,37 +25,58 @@ class AtomSpotifyStatusBarView extends View
       # added as the "last" (farthest right) item in the
       # left side of the status bar
 
-      if !atom.config.get('atom-spotify.showEqualizer')
-        @soundBars.attr('data-hidden', true)
+      atom.config.observe 'atom-spotify.showEqualizer', =>
+        @toggleShowEqualizer atom.config.get('atom-spotify.showEqualizer')
 
-      setTimeout =>
-        if atom.config.get('atom-spotify.displayOnLeftSide')
-          atom.workspaceView.statusBar.appendLeft(this)
-        else
-          atom.workspaceView.statusBar.appendRight(this)
-      , 1
+      atom.config.observe 'atom-spotify.displayOnLeftSide', =>
+        setTimeout =>
+          @appendToStatusBar atom.config.get('atom-spotify.displayOnLeftSide')
+        , 1
 
-  updateTrackInfo: (bars) ->
+  toggleShowEqualizer: (shown)->
+    if shown
+      @soundBars.removeAttr 'data-hidden'
+    else
+      @soundBars.attr 'data-hidden', true
+
+  togglePauseEqualizer: (paused)->
+    if paused
+      @soundBars.attr 'data-state', 'paused'
+    else
+      @soundBars.removeAttr 'data-state'
+
+  appendToStatusBar: (onLeftSide)->
+    this.detach()
+
+    if onLeftSide
+      atom.workspaceView.statusBar.appendLeft(this)
+    else
+      atom.workspaceView.statusBar.appendRight(this)
+
+  updateTrackInfo: () ->
     spotify.isRunning (err, isRunning) =>
       if isRunning
         spotify.getTrack (error, track) =>
           if track
             trackInfoText = "#{track.artist} - #{track.name}"
+
             if !atom.config.get('atom-spotify.showEqualizer')
               trackInfoText = "♫ " + trackInfoText
-            if track
-              @trackInfo.text(trackInfoText)
-              if atom.config.get('atom-spotify.showEqualizer')
-                bars.attr('data-hidden', false)
-            else
-              @trackInfo.text('')
-              if atom.config.get('atom-spotify.showEqualizer')
-                bars.attr('data-hidden', true)
+
+            @trackInfo.text trackInfoText
+          else
+            @trackInfo.text('')
+          @updateEqualizer()
       else # spotify isn't running, hide the sound bars!
         @trackInfo.text('')
-        bars.attr('data-hidden', true)
+
+  updateEqualizer: ()->
+    spotify.isRunning (err, isRunning)=>
+      spotify.getState (err, state)=>
+        return if err
+        @togglePauseEqualizer state.state isnt 'playing'
 
   afterAttach: ->
     setInterval =>
-      @updateTrackInfo(@soundBars)
+      @updateTrackInfo()
     , 1000
