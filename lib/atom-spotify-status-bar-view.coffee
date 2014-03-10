@@ -6,7 +6,7 @@ class AtomSpotifyStatusBarView extends View
   @content: ->
     @div class: 'spotify inline-block', =>
       @div outlet: 'container', class: 'spotify-container', =>
-        @span outlet: 'soundBars', class: 'spotify-sound-bars', =>
+        @span outlet: 'soundBars', 'data-hidden': true, 'data-state': 'paused', class: 'spotify-sound-bars', =>
           @span class: 'spotify-sound-bar'
           @span class: 'spotify-sound-bar'
           @span class: 'spotify-sound-bar'
