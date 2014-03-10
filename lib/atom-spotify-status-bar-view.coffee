@@ -17,6 +17,12 @@ class AtomSpotifyStatusBarView extends View
   initialize: ->
     atom.workspaceView.command 'atom-spotify:next', => spotify.next => @updateTrackInfo()
     atom.workspaceView.command 'atom-spotify:previous', => spotify.previous => @updateTrackInfo()
+    atom.workspaceView.command 'atom-spotify:play', => spotify.play => @updateTrackInfo()
+    atom.workspaceView.command 'atom-spotify:pause', => spotify.pause => @updateTrackInfo()
+    atom.workspaceView.command 'atom-spotify:togglePlay', => @togglePlay()
+
+
+    @on 'click', => @togglePlay()
 
     # We wait until all the other packages have been loaded,
     # so all the other status bar views have been attached
@@ -75,6 +81,13 @@ class AtomSpotifyStatusBarView extends View
       spotify.getState (err, state)=>
         return if err
         @togglePauseEqualizer state.state isnt 'playing'
+
+  togglePlay: ()->
+    spotify.isRunning (err, isRunning) =>
+      if isRunning
+        spotify.playPause =>
+          @updateEqualizer()
+
 
   afterAttach: ->
     setInterval =>

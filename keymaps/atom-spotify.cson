@@ -1,3 +1,6 @@
 '.platform-darwin, .platform-darwin .command-palette .editor':
   'cmd-alt-shift-right': 'atom-spotify:next'
   'cmd-alt-shift-left': 'atom-spotify:previous'
+  'ctrl-alt-t': 'atom-spotify:togglePlay'
+  'ctrl-alt-P': 'atom-spotify:play'
+  'ctrl-alt-p': 'atom-spotify:pause'
