@@ -15,11 +15,11 @@ class AtomSpotifyStatusBarView extends View
         @span outlet: "trackInfo", class: 'atom-spotify-status', tabindex: '-1', ""
 
   initialize: ->
-    atom.workspaceView.command 'atom-spotify:next', => spotify.next => @updateTrackInfo()
-    atom.workspaceView.command 'atom-spotify:previous', => spotify.previous => @updateTrackInfo()
-    atom.workspaceView.command 'atom-spotify:play', => spotify.play => @updateTrackInfo()
-    atom.workspaceView.command 'atom-spotify:pause', => spotify.pause => @updateTrackInfo()
-    atom.workspaceView.command 'atom-spotify:togglePlay', => @togglePlay()
+    atom.views.getView(atom.workspace).command 'atom-spotify:next', => spotify.next => @updateTrackInfo()
+    atom.views.getView(atom.workspace).command 'atom-spotify:previous', => spotify.previous => @updateTrackInfo()
+    atom.views.getView(atom.workspace).command 'atom-spotify:play', => spotify.play => @updateTrackInfo()
+    atom.views.getView(atom.workspace).command 'atom-spotify:pause', => spotify.pause => @updateTrackInfo()
+    atom.views.getView(atom.workspace).command 'atom-spotify:togglePlay', => @togglePlay()
 
 
     @on 'click', => @togglePlay()
