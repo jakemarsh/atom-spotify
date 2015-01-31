@@ -16,28 +16,17 @@ module.exports =
     showPlayIconAsText: false
 
   activate: ->
-    console.log "test0"
-
     atom.packages.once 'activated', =>
-      console.log "test1"
-
       @statusBar = document.querySelector('status-bar')
-
-      # if @statusBar?
-      console.log "test2"
 
       @spotifyView = new AtomSpotifyStatusBarView()
 
       @spotifyView.initialize()
 
-      console.log "test3"
-
       if atom.config.get('atom-spotify.displayOnLeftSide')
         @statusBar.addLeftTile(item: @spotifyView, priority: 100)
       else
         @statusBar.addRightTile(item: @spotifyView, priority: 100)
-
-      console.log "test4"
 
   deactivate: ->
     @spotifyView?.destroy()

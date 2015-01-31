@@ -6,19 +6,7 @@ Number::times = (fn) ->
 
 class AtomSpotifyStatusBarView extends HTMLElement
   initialize: () ->
-    console.log "test5"
-
     @classList.add('spotify', 'inline-block')
-
-#     @div class: 'spotify inline-block', =>
-#       @div outlet: 'container', class: 'spotify-container', =>
-#         @span outlet: 'soundBars', 'data-hidden': true, 'data-state': 'paused', class: 'spotify-sound-bars', =>
-#           @span class: 'spotify-sound-bar'
-#           @span class: 'spotify-sound-bar'
-#           @span class: 'spotify-sound-bar'
-#           @span class: 'spotify-sound-bar'
-#           @span class: 'spotify-sound-bar'
-#         @span outlet: "trackInfo", class: 'atom-spotify-status', tabindex: '-1', ""
 
     div = document.createElement('div')
     div.classList.add('spotify-container')
@@ -39,14 +27,10 @@ class AtomSpotifyStatusBarView extends HTMLElement
 
     @trackInfo = document.createElement('span')
     @trackInfo.classList.add('track-info')
-    @trackInfo.textContent = 'omg its working'
+    @trackInfo.textContent = ''
     div.appendChild(@trackInfo)
 
     @appendChild(div)
-
-    console.log this
-
-    console.log "test6"
 
     atom.commands.add 'atom-workspace', 'atom-spotify:next', => spotify.next => @updateTrackInfo()
     atom.commands.add 'atom-workspace', 'atom-spotify:previous', => spotify.previous => @updateTrackInfo()
@@ -54,30 +38,12 @@ class AtomSpotifyStatusBarView extends HTMLElement
     atom.commands.add 'atom-workspace', 'atom-spotify:pause', => spotify.pause => @updateTrackInfo()
     atom.commands.add 'atom-workspace', 'atom-spotify:togglePlay', => @togglePlay()
 
-    # @on 'click', => @togglePlay()
-
-    # atom.packages.once 'activated', =>
-
-    console.log "test7"
-
     atom.config.observe 'atom-spotify.showEqualizer', (newValue) =>
       @toggleShowEqualizer(newValue)
 
     setInterval =>
       @updateTrackInfo()
     , 1000
-
-
-  # @content: ->
-  #   @div class: 'spotify inline-block', =>
-  #     @div outlet: 'container', class: 'spotify-container', =>
-  #       @span outlet: 'soundBars', 'data-hidden': true, 'data-state': 'paused', class: 'spotify-sound-bars', =>
-  #         @span class: 'spotify-sound-bar'
-  #         @span class: 'spotify-sound-bar'
-  #         @span class: 'spotify-sound-bar'
-  #         @span class: 'spotify-sound-bar'
-  #         @span class: 'spotify-sound-bar'
-  #       @span outlet: "trackInfo", class: 'track-info', tabindex: '-1', ""
 
   updateTrackInfo: () ->
     spotify.isRunning (err, isRunning) =>
