@@ -62,17 +62,28 @@ class AtomSpotifyStatusBarView extends View
   updateTrackInfo: () ->
     spotify.isRunning (err, isRunning) =>
       if isRunning
-        spotify.getTrack (error, track) =>
-          if track
-            trackInfoText = "#{track.artist} - #{track.name}"
+        spotify.getState (err, state)=>
+          if state
+            spotify.getTrack (error, track) =>
+              if track
+                trackInfoText = ""
+                if atom.config.get('atom-spotify.showPlayStatus')
+                  if !atom.config.get('atom-spotify.showPlayIconAsText')
+                    trackInfoText = if state.state == 'playing' then '► ' else '|| '
+                  else
+                    trackInfoText = if state.state == 'playing' then 'Now Playing: ' else 'Paused: '
+                trackInfoText += "#{track.artist} - #{track.name}"
 
-            if !atom.config.get('atom-spotify.showEqualizer')
-              trackInfoText = "♫ " + trackInfoText
+                if !atom.config.get('atom-spotify.showEqualizer')
+                  if atom.config.get('atom-spotify.showPlayStatus')
+                    trackInfoText += " ♫"
+                  else
+                    trackInfoText = "♫ " + trackInfoText
 
-            @trackInfo.text trackInfoText
-          else
-            @trackInfo.text('')
-          @updateEqualizer()
+                @trackInfo.text trackInfoText
+              else
+                @trackInfo.text('')
+              @updateEqualizer()
       else # spotify isn't running, hide the sound bars!
         @trackInfo.text('')
 
