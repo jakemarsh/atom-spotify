@@ -1,63 +1,83 @@
-{View} = require 'atom'
 spotify = require 'spotify-node-applescript'
 
-module.exports =
-class AtomSpotifyStatusBarView extends View
-  @content: ->
-    @div class: 'spotify inline-block', =>
-      @div outlet: 'container', class: 'spotify-container', =>
-        @span outlet: 'soundBars', 'data-hidden': true, 'data-state': 'paused', class: 'spotify-sound-bars', =>
-          @span class: 'spotify-sound-bar'
-          @span class: 'spotify-sound-bar'
-          @span class: 'spotify-sound-bar'
-          @span class: 'spotify-sound-bar'
-          @span class: 'spotify-sound-bar'
-        @span outlet: "trackInfo", class: 'atom-spotify-status', tabindex: '-1', ""
+Number::times = (fn) ->
+  do fn for [1..@valueOf()] if @valueOf()
+  return
 
-  initialize: ->
-    atom.views.getView(atom.workspace).command 'atom-spotify:next', => spotify.next => @updateTrackInfo()
-    atom.views.getView(atom.workspace).command 'atom-spotify:previous', => spotify.previous => @updateTrackInfo()
-    atom.views.getView(atom.workspace).command 'atom-spotify:play', => spotify.play => @updateTrackInfo()
-    atom.views.getView(atom.workspace).command 'atom-spotify:pause', => spotify.pause => @updateTrackInfo()
-    atom.views.getView(atom.workspace).command 'atom-spotify:togglePlay', => @togglePlay()
+class AtomSpotifyStatusBarView extends HTMLElement
+  initialize: () ->
+    console.log "test5"
+
+    @classList.add('spotify', 'inline-block')
+
+#     @div class: 'spotify inline-block', =>
+#       @div outlet: 'container', class: 'spotify-container', =>
+#         @span outlet: 'soundBars', 'data-hidden': true, 'data-state': 'paused', class: 'spotify-sound-bars', =>
+#           @span class: 'spotify-sound-bar'
+#           @span class: 'spotify-sound-bar'
+#           @span class: 'spotify-sound-bar'
+#           @span class: 'spotify-sound-bar'
+#           @span class: 'spotify-sound-bar'
+#         @span outlet: "trackInfo", class: 'atom-spotify-status', tabindex: '-1', ""
+
+    div = document.createElement('div')
+    div.classList.add('spotify-container')
+
+    @soundBars = document.createElement('span')
+    @soundBars.classList.add('spotify-sound-bars')
+    @soundBars.data = {
+      hidden: true,
+      state: 'paused'
+    }
+
+    5.times =>
+      soundBar = document.createElement('span')
+      soundBar.classList.add('spotify-sound-bar')
+      @soundBars.appendChild(soundBar)
+
+    div.appendChild(@soundBars)
+
+    @trackInfo = document.createElement('span')
+    @trackInfo.classList.add('track-info')
+    @trackInfo.textContent = 'omg its working'
+    div.appendChild(@trackInfo)
+
+    @appendChild(div)
+
+    console.log this
+
+    console.log "test6"
+
+    atom.commands.add 'atom-workspace', 'atom-spotify:next', => spotify.next => @updateTrackInfo()
+    atom.commands.add 'atom-workspace', 'atom-spotify:previous', => spotify.previous => @updateTrackInfo()
+    atom.commands.add 'atom-workspace', 'atom-spotify:play', => spotify.play => @updateTrackInfo()
+    atom.commands.add 'atom-workspace', 'atom-spotify:pause', => spotify.pause => @updateTrackInfo()
+    atom.commands.add 'atom-workspace', 'atom-spotify:togglePlay', => @togglePlay()
+
+    # @on 'click', => @togglePlay()
+
+    # atom.packages.once 'activated', =>
+
+    console.log "test7"
+
+    atom.config.observe 'atom-spotify.showEqualizer', (newValue) =>
+      @toggleShowEqualizer(newValue)
+
+    setInterval =>
+      @updateTrackInfo()
+    , 1000
 
 
-    @on 'click', => @togglePlay()
-
-    # We wait until all the other packages have been loaded,
-    # so all the other status bar views have been attached
-    @subscribe atom.packages.once 'activated', =>
-      # We use an ugly setTimeout here to make sure our view gets
-      # added as the "last" (farthest right) item in the
-      # left side of the status bar
-
-      atom.config.observe 'atom-spotify.showEqualizer', =>
-        @toggleShowEqualizer atom.config.get('atom-spotify.showEqualizer')
-
-      atom.config.observe 'atom-spotify.displayOnLeftSide', =>
-        setTimeout =>
-          @appendToStatusBar atom.config.get('atom-spotify.displayOnLeftSide')
-        , 1
-
-  toggleShowEqualizer: (shown)->
-    if shown
-      @soundBars.removeAttr 'data-hidden'
-    else
-      @soundBars.attr 'data-hidden', true
-
-  togglePauseEqualizer: (paused)->
-    if paused
-      @soundBars.attr 'data-state', 'paused'
-    else
-      @soundBars.removeAttr 'data-state'
-
-  appendToStatusBar: (onLeftSide)->
-    this.detach()
-
-    if onLeftSide
-      atom.workspaceView.statusBar.appendLeft(this)
-    else
-      atom.workspaceView.statusBar.appendRight(this)
+  # @content: ->
+  #   @div class: 'spotify inline-block', =>
+  #     @div outlet: 'container', class: 'spotify-container', =>
+  #       @span outlet: 'soundBars', 'data-hidden': true, 'data-state': 'paused', class: 'spotify-sound-bars', =>
+  #         @span class: 'spotify-sound-bar'
+  #         @span class: 'spotify-sound-bar'
+  #         @span class: 'spotify-sound-bar'
+  #         @span class: 'spotify-sound-bar'
+  #         @span class: 'spotify-sound-bar'
+  #       @span outlet: "trackInfo", class: 'track-info', tabindex: '-1', ""
 
   updateTrackInfo: () ->
     spotify.isRunning (err, isRunning) =>
@@ -80,12 +100,13 @@ class AtomSpotifyStatusBarView extends View
                   else
                     trackInfoText = "♫ " + trackInfoText
 
-                @trackInfo.text trackInfoText
+                @trackInfo.textContent = trackInfoText
               else
-                @trackInfo.text('')
+                @trackInfo.textContent = ''
               @updateEqualizer()
       else # spotify isn't running, hide the sound bars!
-        @trackInfo.text('')
+        @trackInfo.textContent = ''
+
 
   updateEqualizer: ()->
     spotify.isRunning (err, isRunning)=>
@@ -99,8 +120,46 @@ class AtomSpotifyStatusBarView extends View
         spotify.playPause =>
           @updateEqualizer()
 
+  toggleShowEqualizer: (shown) ->
+    if shown
+      @soundBars.removeAttribute 'data-hidden'
+    else
+      @soundBars.setAttribute 'data-hidden', true
 
-  afterAttach: ->
-    setInterval =>
-      @updateTrackInfo()
-    , 1000
+  togglePauseEqualizer: (paused) ->
+    if paused
+      @soundBars.setAttribute 'data-state', 'paused'
+    else
+      @soundBars.removeAttribute 'data-state'
+
+module.exports = document.registerElement('status-bar-spotify',
+                                          prototype: AtomSpotifyStatusBarView.prototype,
+                                          extends: 'div')
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# module.exports =
+# class AtomSpotifyStatusBarView extends View
+#   @content: ->
+#     @div class: 'spotify inline-block', =>
+#       @div outlet: 'container', class: 'spotify-container', =>
+#         @span outlet: 'soundBars', 'data-hidden': true, 'data-state': 'paused', class: 'spotify-sound-bars', =>
+#           @span class: 'spotify-sound-bar'
+#           @span class: 'spotify-sound-bar'
+#           @span class: 'spotify-sound-bar'
+#           @span class: 'spotify-sound-bar'
+#           @span class: 'spotify-sound-bar'
+#         @span outlet: "trackInfo", class: 'atom-spotify-status', tabindex: '-1', ""

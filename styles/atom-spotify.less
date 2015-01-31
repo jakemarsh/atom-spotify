@@ -1,0 +1,49 @@
+// The ui-variables file is provided by base themes provided by Atom.
+//
+// See https://github.com/atom/atom-dark-ui/blob/master/stylesheets/ui-variables.less
+// for a full listing of what's available.
+@import "ui-variables";
+
+// .track-info {
+//   color: @text-color;
+// }
+
+.spotify-sound-bars {
+  display: inline-block;
+  position: relative;
+  margin-right: .4em;
+  height: 14px;
+  overflow: hidden;
+
+  &[data-state="paused"] {
+    .rdio-sound-bar {
+      -webkit-animation-play-state: paused;
+    }
+
+    .spotify-sound-bar {
+      -webkit-animation-play-state: paused;
+    }
+  }
+
+  &[data-hidden=true] { display: none }
+}
+
+.spotify-sound-bar + .rdio-sound-bar { margin-left: 1px }
+.spotify-sound-bar {
+  display: inline-block;
+  width: 3px; height: 3px;
+  background: @text-color-subtle;
+  -webkit-animation: sound 400ms linear infinite alternate;
+}
+
+.spotify-sound-bar:nth-child(1) { -webkit-animation-duration: 274ms }
+.spotify-sound-bar:nth-child(2) { -webkit-animation-duration: 233ms }
+.spotify-sound-bar:nth-child(3) { -webkit-animation-duration: 207ms }
+.spotify-sound-bar:nth-child(4) { -webkit-animation-duration: 258ms }
+.spotify-sound-bar:nth-child(5) { -webkit-animation-duration: 200ms }
+
+
+@-webkit-keyframes sound {
+  0%   { opacity: .35; height: 3px; }
+  100% { opacity: 1;   height: 14px; }
+}
