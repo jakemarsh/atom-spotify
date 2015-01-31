@@ -1,4 +1,4 @@
-'.platform-darwin, .platform-darwin .command-palette .editor':
+'.platform-darwin, .platform-darwin .command-palette .atom-text-editor':
   'cmd-alt-shift-right': 'atom-spotify:next'
   'cmd-alt-shift-left': 'atom-spotify:previous'
   'ctrl-alt-t': 'atom-spotify:togglePlay'
