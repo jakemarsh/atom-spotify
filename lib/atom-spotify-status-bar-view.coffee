@@ -43,7 +43,7 @@ class AtomSpotifyStatusBarView extends HTMLElement
 
     setInterval =>
       @updateTrackInfo()
-    , 1000
+    , 5000
 
   updateTrackInfo: () ->
     spotify.isRunning (err, isRunning) =>
