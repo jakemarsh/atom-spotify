@@ -1,14 +1,14 @@
 AtomSpotifyStatusBarView = require './atom-spotify-status-bar-view'
 
 module.exports =
-  configDefaults:
+  config:
     displayOnLeftSide: true
     showEqualizer: false
     showPlayStatus: true
     showPlayIconAsText: false
 
   activate: ->
-    atom.packages.once 'activated', =>
+    atom.packages.onDidActivateInitialPackages =>
       @statusBar = document.querySelector('status-bar')
 
       @spotifyView = new AtomSpotifyStatusBarView()
