@@ -7,6 +7,14 @@
   "os": [
     "darwin"
   ],
+  "name": "my-package",
+  "consumedServices": {
+    "status-bar": {
+      "versions": {
+        "^1.0.0": "consumeStatusBar"
+      }
+    }
+  },
   "license": "MIT",
   "engines": {
     "atom": ">0.50.0"
